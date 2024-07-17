@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;  // ← 修正
+import java.sql.PreparedStatement; // ← 修正
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -22,20 +22,20 @@ public class Review05 {
             Class.forName("com.mysql.cj.jdbc.Driver");
 
             // 2. DBと接続する
-            con = DriverManager.getConnection("jdbc:mysql://localhost/kadaidb?useSSL=false&allowPublicKeyRetrieval=true",
-                    "root", "Kirarin00");
+            con = DriverManager.getConnection(
+                    "jdbc:mysql://localhost/kadaidb?useSSL=false&allowPublicKeyRetrieval=true", "root", "Kirarin00");
 
             // 4. DBとやりとりする窓口（Statementオブジェクト）の作成
-            String sql = "SELECT * FROM person WHERE id = ?";    // ← 修正
+            String sql = "SELECT * FROM person WHERE id = ?"; // ← 修正
             pstmt = con.prepareStatement(sql); // ← 修正
             // 5, 6. Select文の実行と結果を格納／代入
             System.out.print("検索キーワードを入力してください > ");
-            String input = keyIn();
+            int input = keyInNum();
 
-         // PreparedStatementオブジェクトの?に値をセット  // ← 追記
-            pstmt.setString(1, input);  // ← 追記
+            // PreparedStatementオブジェクトの?に値をセット // ← 追記
+            pstmt.setInt(1, input); // ← 追記
 
-            rs = pstmt.executeQuery();  // ← 修正
+            rs = pstmt.executeQuery(); // ← 修正
             // 7. 結果を表示する
             while (rs.next()) {
                 // Name列の値を取得
@@ -83,15 +83,27 @@ public class Review05 {
         }
     }
 
-private static String keyIn() {
-    String line = null;
-    try {
-        BufferedReader key = new BufferedReader(new InputStreamReader(System.in));
-        line = key.readLine();
-    } catch (IOException e) {
+    private static String keyIn() {
+        String line = null;
+        try {
+            BufferedReader key = new BufferedReader(new InputStreamReader(System.in));
+            line = key.readLine();
+        } catch (IOException e) {
 
+        }
+        return line;
     }
-    return line;
-}
+
+    /*
+     * キーボードから入力された値をintで返す 引数：なし 戻り値：int
+     */
+    private static int keyInNum() {
+        int result = 0;
+        try {
+            result = Integer.parseInt(keyIn());
+        } catch (NumberFormatException e) {
+        }
+        return result;
+    }
 
 }
